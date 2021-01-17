@@ -1,6 +1,6 @@
-# Riru - Template
+# Riru-Shell - Template
 
-[Riru](https://github.com/RikkaApps/Riru) module template.
+[Riru-Shell](https://github.com/HimekoEx/Riru-Shell) module template.
 
 ## Build
 

@@ -13,6 +13,7 @@ android {
                         "-DRIRU_MODULE_VERSION=$moduleVersionCode",
                         "-DRIRU_MODULE_VERSION_NAME:STRING=\"$moduleVersion\""
 
+                abiFilters "armeabi-v7a", "arm64-v8a"
             }
         }
     }
@@ -80,13 +81,12 @@ android.libraryVariants.all { variant ->
         copy {
             from "$rootDir/template/magisk_module"
             into magiskDir.path
-            exclude 'riru.sh'
+            exclude 'riru.sh', '!install.sh'
         }
         // copy riru.sh
         copy {
-            from "$rootDir/template/magisk_module"
+            from file("$rootDir/template/magisk_module/riru.sh"), file("$rootDir/template/magisk_module/!install.sh")
             into magiskDir.path
-            include 'riru.sh'
             filter { line ->
                 line.replaceAll('%%%RIRU_MODULE_ID%%%', moduleId)
                         .replaceAll('%%%RIRU_MODULE_API_VERSION%%%', moduleRiruApiVersion.toString())
@@ -119,10 +119,10 @@ android.libraryVariants.all { variant ->
 
         file("$magiskDir/system").mkdirs()
         file("$magiskDir/system_x86").mkdirs()
-        renameOrFail(file("$nativeOutDir/arm64-v8a"), file("$magiskDir/system/lib64"))
         renameOrFail(file("$nativeOutDir/armeabi-v7a"), file("$magiskDir/system/lib"))
-        renameOrFail(file("$nativeOutDir/x86_64"), file("$magiskDir/system_x86/lib64"))
-        renameOrFail(file("$nativeOutDir/x86"), file("$magiskDir/system_x86/lib"))
+        renameOrFail(file("$nativeOutDir/arm64-v8a"), file("$magiskDir/system/lib64"))
+        //renameOrFail(file("$nativeOutDir/x86"), file("$magiskDir/system_x86/lib"))
+        //renameOrFail(file("$nativeOutDir/x86_64"), file("$magiskDir/system_x86/lib64"))
 
         // generate sha1sum
         fileTree("$magiskDir").matching {
